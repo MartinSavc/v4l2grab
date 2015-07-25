@@ -16,9 +16,12 @@ AC_PROG_CC
 # Checks for libraries.
 AC_CHECK_LIB([jpeg], [jpeg_start_compress])
 AC_CHECK_LIB([v4l2], [v4l2_open])
+AC_CHECK_LIB([opencv_core], [cvCreateMatHeader,cvSetData])
+AC_CHECK_LIB([opencv_imgproc], [cvCvtColor])
+AC_CHECK_LIB([opencv_highgui],[cvShowImage,cvWaitKey,cvSaveImage,cvReleaseMat])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h sys/ioctl.h sys/time.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h malloc.h stdlib.h string.h sys/ioctl.h sys/time.h unistd.h opencv2/highgui/highgui_c.h opencv2/core/core_c.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T

@@ -12,6 +12,15 @@
 /* Define to 1 if you have the `jpeg' library (-ljpeg). */
 #undef HAVE_LIBJPEG
 
+/* Define to 1 if you have the `opencv_core' library (-lopencv_core). */
+#undef HAVE_LIBOPENCV_CORE
+
+/* Define to 1 if you have the `opencv_highgui' library (-lopencv_highgui). */
+#undef HAVE_LIBOPENCV_HIGHGUI
+
+/* Define to 1 if you have the `opencv_imgproc' library (-lopencv_imgproc). */
+#undef HAVE_LIBOPENCV_IMGPROC
+
 /* Define to 1 if you have the `v4l2' library (-lv4l2). */
 #undef HAVE_LIBV4L2
 
@@ -24,6 +33,12 @@
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <opencv2/core/core_c.h> header file. */
+#undef HAVE_OPENCV2_CORE_CORE_C_H
+
+/* Define to 1 if you have the <opencv2/highgui/highgui_c.h> header file. */
+#undef HAVE_OPENCV2_HIGHGUI_HIGHGUI_C_H
 
 /* Define to 1 if you have the `select' function. */
 #undef HAVE_SELECT

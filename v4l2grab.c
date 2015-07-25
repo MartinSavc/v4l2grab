@@ -59,6 +59,10 @@
 #include <libv4l2.h>
 #include <signal.h>
 
+#include <opencv2/core/core_c.h>
+#include <opencv2/imgproc/imgproc_c.h>
+#include <opencv2/highgui/highgui_c.h>
+
 #include "config.h"
 #include "yuv.h"
 
@@ -100,6 +104,8 @@ static unsigned int width = 640;
 static unsigned int height = 480;
 static unsigned int fps = 30;
 static int continuous = 0;
+static int capture = 0;
+static int live_preview = 1;
 static unsigned char jpegQuality = 70;
 static char* jpegFilename = NULL;
 static char* jpegFilenamePart = NULL;
@@ -217,17 +223,45 @@ static void imageProcess(const void* p, struct timeval timestamp)
 	unsigned char* src = (unsigned char*)p;
 	unsigned char* dst = malloc(width*height*3*sizeof(char));
 
+
 	YUV420toYUV444(width, height, src, dst);
 
-	if(continuous==1) {
+	if(continuous && capture) {
 		static int img_ind = 0;		
 		long timestamp_long;
 		timestamp_long = timestamp.tv_sec*1e6 + timestamp.tv_usec;
 		sprintf(jpegFilename,"%s_%010d_%010ld.jpg",jpegFilenamePart,img_ind++,timestamp_long);
 
 	}
-	// write jpeg
-	jpegWrite(dst,jpegFilename);
+        if(live_preview){
+            CvMat* img = cvCreateMatHeader(height,width,CV_8UC3);
+            CvMat* img_rgb  = cvCreateMat(height,width,CV_8UC3);
+            cvSetData(img,dst,width*3*sizeof(char));
+            cvCvtColor(img,img_rgb, CV_YCrCb2RGB);
+
+            if(capture){
+                cvCircle(img_rgb, cvPoint(20,20), 10, cvScalar(150,150,230,0), -1,8,0);
+                jpegWrite(dst,jpegFilename);
+            }else {
+                cvCircle(img_rgb, cvPoint(20,20), 10, cvScalar(150,150,150,0), -1,8,0);
+            }
+
+            cvShowImage("preview",img_rgb);
+            int key = cvWaitKey(10);
+            if(key == 0x1b) {
+                continuous = 0;
+            }else
+            if(key == ' ') {
+                capture = !capture;
+            }
+            cvReleaseMat(&img);
+            cvReleaseMat(&img_rgb);
+
+        }else
+        {
+            // write jpeg
+            jpegWrite(dst,jpegFilename);
+        }
 
 	// free temporary image
 	free(dst);
